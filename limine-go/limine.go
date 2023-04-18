@@ -507,8 +507,8 @@ const (
 )
 
 type BootTimeResponse struct {
-	Revision  uint64
-	Boot_time int64
+	Revision uint64
+	BootTime int64
 }
 
 type BootTimeRequest struct {
@@ -525,9 +525,9 @@ const (
 )
 
 type KernelAddressResponse struct {
-	Revision      uint64
-	Physical_base uint64
-	Virtual_base  uint64
+	Revision     uint64
+	PhysicalBase uint64
+	VirtualBase  uint64
 }
 
 type KernelAddressRequest struct {
