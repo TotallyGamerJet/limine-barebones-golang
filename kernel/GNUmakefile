@@ -5,6 +5,10 @@ override MAKEFLAGS += -rR
 # Change as needed.
 override KERNEL := kernel.elf
 
+# How should these be defined?
+override OBJCOPY := x86_64-elf-objcopy
+override LD := x86_64-elf-ld
+
 # Internal linker flags that should not be changed by the user.
 override LDFLAGS += \
     -nostdlib \
@@ -16,18 +20,14 @@ override LDFLAGS += \
 override GOFLAGS := \
     -ldflags="-tmpdir ./ \
     -linkmode external \
-    -extld x86_64-elf-ld \
+    -extld $(LD) \
     -extldflags '$(LDFLAGS)'"
-
-# Check if the linker supports -no-pie and enable it if it does.
-ifeq ($(shell $(LD) --help 2>&1 | grep 'no-pie' >/dev/null 2>&1; echo $$?),0)
-    override LDFLAGS += -no-pie
-endif
 
 # Use "find" to glob all *.go files in the tree and obtain the
 # object and header dependency file names.
 override GOFILES := $(shell find -L . -type f -name '*.go')
-override OBJ := $(GOFILES:.go=.o)
+override ASMFILES := $(shell find -L . -type f -name '*.s')
+override OBJ := $(GOFILES:.go=.o) $(ASFILES:.S=.o)
 
 # Default target.
 .PHONY: all
@@ -35,12 +35,13 @@ all: $(KERNEL)
 
 # Link rules for the final kernel executable.
 $(KERNEL): $(OBJ)
-	x86_64-elf-ld $(OBJ) $(LDFLAGS) -o $@
+	$(LD) $(OBJ) $(LDFLAGS) -o $@
 
 # Compilation rules for *.go and *.s files.
 %.o: %.go %.s
 	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $@
-	x86_64-elf-objcopy --globalize-symbol=_start go.o $@
+	# Go symbols are not global by default so globalize it
+	$(OBJCOPY) --globalize-symbol=_start go.o $@
 	rm go.o
 	rm trivial.c
 
