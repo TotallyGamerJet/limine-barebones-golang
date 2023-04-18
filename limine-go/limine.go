@@ -32,13 +32,13 @@ type File struct {
 	cmdline        *byte
 	MediaType      uint32
 	_              uint32 // Unused
-	Tftp_ip        uint32
-	Tftp_port      uint32
+	TftpIp         uint32
+	TftpPort       uint32
 	PartitionIndex uint32
-	Mbr_disk_id    uint32
-	Gpt_disk_uuid  UUID
-	Gpt_part_uuid  UUID
-	Part_uuid      UUID
+	MbrDiskId      uint32
+	GptDiskUuid    UUID
+	GptPartUuid    UUID
+	PartUuid       UUID
 }
 
 func (f *File) Data() []byte {
@@ -411,8 +411,8 @@ const (
 )
 
 type KernelFileResponse struct {
-	Revision    uint64
-	Kernel_file *File
+	Revision   uint64
+	KernelFile *File
 }
 
 type KernelFileRequest struct {
@@ -493,8 +493,8 @@ const (
 
 type SMBIOSResponse struct {
 	Revision uint64
-	Entry_32 unsafe.Pointer
-	Entry_64 unsafe.Pointer
+	Entry32  unsafe.Pointer
+	Entry64  unsafe.Pointer
 }
 
 type SMBIOSsRequest struct {
@@ -570,7 +570,7 @@ const (
 
 type DTBResponse struct {
 	Revision uint64
-	Dtb_ptr  unsafe.Pointer
+	DtbPtr   unsafe.Pointer
 }
 
 type DTBRequest struct {
