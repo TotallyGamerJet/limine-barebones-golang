@@ -336,8 +336,6 @@ const (
 	MemmapFramebuffer           = 7
 )
 
-var MemMapRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x67cf3d9d378a806f, 0xe304acdfc50c3c62}
-
 const (
 	MemMapRequestId2 = 0x67cf3d9d378a806f
 	MemMapRequestId3 = 0xe304acdfc50c3c62
@@ -485,7 +483,10 @@ type SMBIOSsRequest struct {
 
 // EFI System Table
 
-var EfiSystemTableRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x5ceba5163eaaf6d6, 0x0a6981610cf65fcc}
+const (
+	EfiSystemTableRequestId2 = 0x5ceba5163eaaf6d6
+	EfiSystemTableRequestId3 = 0x0a6981610cf65fcc
+)
 
 type EfiSystemTableResponse struct {
 	Revision uint64
