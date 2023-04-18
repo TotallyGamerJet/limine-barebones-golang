@@ -59,7 +59,7 @@ all: $(KERNEL)
 
 # Compilation rules for *.go files.
 $(KERNEL): $(GOFILES)
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $@
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v1 go build $(GOFLAGS) -o $@
 
 # Remove object files and the final executable.
 .PHONY: clean
