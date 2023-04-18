@@ -1,18 +1,24 @@
 package limine
 
+import "unsafe"
+
 type SMPInfo struct {
-	Processor_id   uint32
-	Gic_iface_no   uint32
-	Mpidr          uint64
-	Reserved       uint64
-	Goto_address   GotoAddress
-	Extra_argument uint64
+	ProcessorId   uint32
+	GicIfaceNo    uint32
+	Mpidr         uint64
+	_             uint64 // Reserved
+	GotoAddress   GotoAddress
+	ExtraArgument uint64
 }
 
 type SMPResponse struct {
-	Revision  uint64
-	Flags     uint32
-	Bsp_mpidr uint64
-	Cpu_count uint64
-	Cpus      **SMPInfo
+	Revision uint64
+	Flags    uint32
+	BspMpidr uint64
+	cpuCount uint64
+	cpus     **SMPInfo
+}
+
+func (s *SMPResponse) Cpus() []*SMPInfo {
+	return unsafe.Slice(s.cpus, s.cpuCount)
 }
