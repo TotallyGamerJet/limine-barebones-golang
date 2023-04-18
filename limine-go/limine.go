@@ -55,8 +55,6 @@ func (f *File) Cmdline() string {
 
 // Boot Info
 
-var _BootloaderInfoRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xf55038d8e2a1202f, 0x279426fcf5f59740}
-
 const (
 	BootloaderInfoRequestId2 = 0xf55038d8e2a1202f
 	BootloaderInfoRequestId3 = 0x279426fcf5f59740
@@ -84,8 +82,6 @@ type BootloaderInfoRequest struct {
 
 // Stack size
 
-var _StackSizeRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x224ef0460a8e8926, 0xe1cb0fc25f46ea3d}
-
 const (
 	StackSizeRequestId2 = 0x224ef0460a8e8926
 	StackSizeRequestId3 = 0xe1cb0fc25f46ea3d
@@ -103,8 +99,6 @@ type StackSizeRequest struct {
 }
 
 // HHDM
-
-var _HHDMRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x48dcf1cb8ad2b852, 0x63984e959a98244b}
 
 const (
 	HHDMRequestId2 = 0x48dcf1cb8ad2b852
@@ -125,8 +119,6 @@ type HHDMRequest struct {
 // Framebuffer
 
 const FrameBufferRGB byte = 1
-
-var _FramebufferRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x9d5827dcd881dd75, 0xa3148604f6fab11b}
 
 const (
 	FramebufferRequestId2 = 0x9d5827dcd881dd75
@@ -199,9 +191,6 @@ type FramebufferRequest struct {
 }
 
 // Terminal
-
-// Deprecated: do not use if possible.
-var _TerminalRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xc8ac59310c2b0844, 0xa68d0c7265d38878}
 
 const (
 	TerminalRequestId2 = 0xc8ac59310c2b0844 // Deprecated: do not use if possible.
@@ -295,8 +284,6 @@ type TerminalRequest struct {
 
 // 5-level paging
 
-var _FiveLevelPagingRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x94469551da9b3192, 0xebe5e86db7382888}
-
 const (
 	FiveLevelPagingRequestId2 = 0x94469551da9b3192
 	FiveLevelPagingRequestId3 = 0xebe5e86db7382888
@@ -317,8 +304,6 @@ type FiveLevelPagingRequest struct {
 const (
 	SmpX2apic = 1
 )
-
-var _SMPRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x95a67b819a1b857e, 0xa0b61b723b6a73e0}
 
 const (
 	SMPRequestId2 = 0x95a67b819a1b857e
@@ -382,8 +367,6 @@ type MemMapRequest struct {
 
 // Entry Point
 
-var _EntryPointRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x13d86c035a1cd3e1, 0x2b0caa89d8f3026a}
-
 const (
 	EntryPointRequestId2 = 0x13d86c035a1cd3e1
 	EntryPointRequestId3 = 0x2b0caa89d8f3026a
@@ -408,8 +391,6 @@ type EntryPointRequest struct {
 
 // Kernel File
 
-var _KernelFileRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xad97e90e83f1ed67, 0x31eb5d1c5ff23b69}
-
 const (
 	KernelFileRequestId2 = 0xad97e90e83f1ed67
 	KernelFileRequestId3 = 0x31eb5d1c5ff23b69
@@ -431,8 +412,6 @@ type KernelFileRequest struct {
 const (
 	InternalModuleRequired = 1
 )
-
-var _ModuleRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x3e7e279702be32af, 0xca1c4f3bd1280cee}
 
 const (
 	ModuleRequestId2 = 0x3e7e279702be32af
@@ -469,8 +448,6 @@ func (m *ModuleRequest) InternalModules() []*InternalModule {
 
 // RSDP
 
-var _RSDPRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xc5e77b6b397e7b43, 0x27637845accdcf3c}
-
 const (
 	RSDPRequestId2 = 0xc5e77b6b397e7b43
 	RSDPRequestId3 = 0x27637845accdcf3c
@@ -488,8 +465,6 @@ type RSDPRequest struct {
 }
 
 // SMBIOS
-
-var _SMBIOSRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x9e9046f11e095391, 0xaa4a520fefbde5ee}
 
 const (
 	SMBIOSRequestId2 = 0x9e9046f11e095391
@@ -525,8 +500,6 @@ type EfiSystemTableRequest struct {
 
 // Boot time
 
-var _BootTimeRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x502746e184c088aa, 0xfbc5ec83e6327893}
-
 const (
 	BootTimeRequestId2 = 0x502746e184c088aa
 	BootTimeRequestId3 = 0xfbc5ec83e6327893
@@ -544,8 +517,6 @@ type BootTimeRequest struct {
 }
 
 // Kernel address
-
-var _KernelAddressRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x71ba76863cc55f63, 0xb2644a48c516a487}
 
 const (
 	KernelAddressRequestId2 = 0x71ba76863cc55f63
@@ -565,8 +536,6 @@ type KernelAddressRequest struct {
 }
 
 // Device Tree Blob
-
-var _DTBRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xb40ddb48fb54bac7, 0x545081493f81ffb7}
 
 const (
 	DTBRequestId2 = 0xb40ddb48fb54bac7
