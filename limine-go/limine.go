@@ -204,6 +204,11 @@ type FramebufferRequest struct {
 var _TerminalRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0xc8ac59310c2b0844, 0xa68d0c7265d38878}
 
 const (
+	TerminalRequestId2 = 0xc8ac59310c2b0844 // Deprecated: do not use if possible.
+	TerminalRequestId3 = 0xa68d0c7265d38878 // Deprecated: do not use if possible.
+)
+
+const (
 	TerminalCbDec          = 10 // Deprecated: do not use if possible.
 	TerminalCbBell         = 20 // Deprecated: do not use if possible.
 	TerminalCbPrivateId    = 30 // Deprecated: do not use if possible.
@@ -290,7 +295,7 @@ type TerminalRequest struct {
 
 // 5-level paging
 
-var FiveLevelPagingRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x94469551da9b3192, 0xebe5e86db7382888}
+var _FiveLevelPagingRequestId = [...]uint64{CommonMagic0, CommonMagic1, 0x94469551da9b3192, 0xebe5e86db7382888}
 
 const (
 	FiveLevelPagingRequestId2 = 0x94469551da9b3192
