@@ -5,9 +5,26 @@ override MAKEFLAGS += -rR
 # Change as needed.
 override KERNEL := kernel.elf
 
-# How should these be defined?
-override OBJCOPY := x86_64-elf-objcopy
-override LD := x86_64-elf-ld
+# Convenience macro to reliably declare user overridable variables.
+define DEFAULT_VAR =
+    ifeq ($(origin $1),default)
+        override $(1) := $(2)
+    endif
+    ifeq ($(origin $1),undefined)
+        override $(1) := $(2)
+    endif
+endef
+
+# It is highly recommended to use a custom built cross toolchain to build a kernel.
+# We are only using "ld" as a placeholder here. It may work by using
+# the host system's toolchain, but this is not guaranteed.
+$(eval $(call DEFAULT_VAR,LD,ld))
+
+# User controllable Go flags.
+$(eval $(call DEFAULT_VAR,GOFLAGS,))
+
+# User controllable linker flags. We set none by default.
+$(eval $(call DEFAULT_VAR,LDFLAGS,))
 
 # Internal linker flags that should not be changed by the user.
 override LDFLAGS += \
@@ -17,39 +34,31 @@ override LDFLAGS += \
     -z max-page-size=0x1000 \
     -T linker.ld
 
-override GOFLAGS := \
-    -ldflags="-tmpdir ./ \
-    -linkmode external \
-    -extld $(LD) \
-    -extldflags '$(LDFLAGS)'"
+# Check if the linker supports -no-pie and enable it if it does.
+ifeq ($(shell $(LD) --help 2>&1 | grep 'no-pie' >/dev/null 2>&1; echo $$?),0)
+    override LDFLAGS += -no-pie
+endif
 
-# Use "find" to glob all *.go files in the tree and obtain the
+override GOFLAGS += \
+    -ldflags=" \
+        -linkmode external \
+        -extld '$(LD)' \
+        -extldflags '$(LDFLAGS)' \
+    "
+
+# Use "find" to glob all *.go and *.S files in the tree and obtain the
 # object and header dependency file names.
 override GOFILES := $(shell find -L . -type f -name '*.go')
-override ASMFILES := $(shell find -L . -type f -name '*.s')
-override OBJ := $(GOFILES:.go=.o) $(ASFILES:.S=.o)
 
 # Default target.
 .PHONY: all
 all: $(KERNEL)
 
-# Link rules for the final kernel executable.
-$(KERNEL): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -o $@
-
-# Compilation rules for *.go and *.s files.
-%.o: %.go %.s
-	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $@
-	# Go symbols are not global by default so globalize it
-	$(OBJCOPY) --globalize-symbol=_start go.o $@
-	rm go.o
-	rm trivial.c
+# Compilation rules for *.go files.
+$(KERNEL): $(GOFILES)
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $@
 
 # Remove object files and the final executable.
 .PHONY: clean
 clean:
-	rm -rf $(KERNEL) $(OBJ) $(HEADER_DEPS)
-
-.PHONY: distclean
-distclean: clean
-	rm -f limine.h
+	rm -rf $(KERNEL)

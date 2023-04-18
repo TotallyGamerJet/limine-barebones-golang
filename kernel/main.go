@@ -3,7 +3,7 @@ package main
 import (
 	"unsafe"
 
-	"github.com/totallygamerjet/limine-barebones-golang/limine-go"
+	"github.com/totallygamerjet/limine-go"
 )
 
 // The Limine requests can be placed anywhere, but it is important that
@@ -20,7 +20,10 @@ var framebufferRequest = limine.FramebufferRequest{
 }
 
 // Halt and catch fire function.
-func hcf()
+func hcf() {
+	for {
+	}
+}
 
 // The following will be our kernel's entry point.
 // If renaming _start() to something else, make sure to change the
