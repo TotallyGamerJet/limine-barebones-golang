@@ -31,8 +31,10 @@ func hcf() {
 //
 // Here is why each pragma below is needed:
 //
+// cgo_export_static - Exports the symbol for the external linker to see
+//
 // linkname - Go symbols are a combination of their package and func name.
-// So this func is actually github.com/totallygamerjet/limine/main._start
+// So this func is actually gmain._start
 // This creates a link to this function just as _start
 //
 // noinline - Without this the Go compiler optimizes this function away
@@ -40,6 +42,7 @@ func hcf() {
 // nosplit - Go has growable stacks. Since we haven't set up the stack,
 // yet it must be disabled.
 //
+//go:cgo_export_static _start _start
 //go:linkname _start _start
 //go:noinline
 //go:nosplit

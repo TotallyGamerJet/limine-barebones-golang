@@ -40,6 +40,9 @@ ifeq ($(shell $(LD) --help 2>&1 | grep 'no-pie' >/dev/null 2>&1; echo $$?),0)
 endif
 
 override GOFLAGS += \
+	# tell the compiler this package is a part of the stdlib so that Cgo pragmas are allowed
+	# TODO: change this to the official package once moved
+	-gcflags=github.com/totallygamerjet/limine-barebones-golang/kernel=-std \
     -ldflags=" \
         -linkmode external \
         -extld '$(LD)' \
