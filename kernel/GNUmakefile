@@ -37,8 +37,8 @@ all: $(KERNEL)
 $(KERNEL): $(OBJ)
 	x86_64-elf-ld $(OBJ) $(LDFLAGS) -o $@
 
-# Compilation rules for *.go files.
-%.o: %.go
+# Compilation rules for *.go and *.s files.
+%.o: %.go %.s
 	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $@
 	x86_64-elf-objcopy --globalize-symbol=_start go.o $@
 	rm go.o

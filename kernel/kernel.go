@@ -49,15 +49,15 @@ func _start() {
 	framebuffer := framebufferRequest.Response.Framebuffers()[0]
 	// Note: we assume the framebuffer model is RGB with 32-bit pixels.
 	for i := uint64(0); i < 100; i++ {
-		fbPtr := framebuffer.Address
-		*(*uint32)(unsafe.Add(fbPtr, unsafe.Sizeof(uint32(0))*uintptr(i*(framebuffer.Pitch/4)+i))) = 0xffffff
+		pixOffset := uintptr(i*(framebuffer.Pitch/4) + i)
+		*(*uint32)(unsafe.Add(framebuffer.Address, pixOffset*unsafe.Sizeof(uint32(0)))) = 0xffffff
 	}
 	// We're done, just hang...
 	hcf()
 }
 
-// All Go programs expect there is be a main function
+// All Go programs expect there to be a main function even though this is never called
 func main() {
-	/* ensure that the _start function isn't optimized away */
+	/* This is here to ensure that the _start function isn't optimized away */
 	_start()
 }
