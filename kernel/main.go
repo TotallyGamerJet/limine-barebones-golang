@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"unsafe"
 
 	"github.com/totallygamerjet/limine-go"
@@ -50,13 +51,23 @@ func _start() {
 	}
 	// Fetch the first framebuffer.
 	framebuffer := framebufferRequest.Response.Framebuffers()[0]
+	lfb := unsafe.Slice((*uint32)(framebuffer.Address), framebuffer.Pitch*framebuffer.Height)
 	// Note: we assume the framebuffer model is RGB with 32-bit pixels.
 	for i := uint64(0); i < 100; i++ {
-		pixOffset := uintptr(i*(framebuffer.Pitch/4) + i)
-		*(*uint32)(unsafe.Add(framebuffer.Address, pixOffset*unsafe.Sizeof(uint32(0)))) = 0xffffff
+		putPixel(lfb, int(framebuffer.Width), int(framebuffer.Pitch), int(i), int(i), 0xffffff)
 	}
+	initPSF(lfb, int(framebuffer.Pitch))
+	drawString(lfb, int(framebuffer.Width), int(framebuffer.Pitch), "Hello World!", 0, 0, 0xFFFFFFFF, 0xFF00FFFF)
 	// We're done, just hang...
 	hcf()
+}
+
+func putPixel(screen []uint32, _, pitch, x, y int, color uint32) {
+	where := y*(pitch/4) + x
+	if where > len(screen) {
+		return
+	}
+	screen[where] = color
 }
 
 // All Go programs expect there to be a main function even though this is never called
