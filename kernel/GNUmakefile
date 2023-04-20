@@ -42,6 +42,7 @@ endif
 # tell the compiler this package is a part of the stdlib so that Cgo pragmas are allowed
 # TODO: change this to the official package once moved
 override GOFLAGS += \
+	-asmflags="-compiling-runtime" \
 	-gcflags=github.com/totallygamerjet/limine-barebones-golang/kernel=-std \
     -ldflags=" \
         -linkmode external \

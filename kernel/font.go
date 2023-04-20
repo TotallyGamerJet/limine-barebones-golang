@@ -40,7 +40,6 @@ func initPSF(screen []uint32, pitch int) {
 	}
 }
 
-//go:nosplit
 func drawString(screen []uint32, width, pitch int, str string, xOff, yOff int, fgColor, bgColor uint32) {
 	// TODO: support UTF8
 	for i := 0; i < len(str); i++ {
