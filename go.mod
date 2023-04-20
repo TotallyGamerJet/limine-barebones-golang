@@ -1,5 +1,5 @@
 //TODO: change this once in official repo
-module github.com/totallygamerjet/limine-barebones-golang/kernel
+module github.com/totallygamerjet/limine-barebones-golang
 
 go 1.20
 
