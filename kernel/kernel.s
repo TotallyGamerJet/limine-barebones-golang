@@ -1,20 +1,16 @@
 #include "textflag.h"
 #include "go_asm.h"
 
-TEXT _start(SB), NOSPLIT|TOPFRAME, $0-0
-	MOVQ $runtime·g0(SB), DI
-	LEAQ (-65536)(SP), BX
-	MOVQ BX, g_stackguard0(DI)
-	MOVQ BX, g_stackguard1(DI)
-	MOVQ BX, (g_stack+stack_lo)(DI)
-	MOVQ SP, (g_stack+stack_hi)(DI)
-	MOVQ DI, R14                    // set the g register
+// copied from go_tls.h
+#ifdef GOARCH_amd64
+#define get_tls(r)	MOVQ TLS, r
+#define g(r)	0(r)(TLS*1)
+#endif
 
-	CALL main·_start<ABIInternal>(SB)
-
-	CLI
-
-loop:
-	HLT
-	JMP loop
+// func setg(gg *g)
+// set g. for use by needm.
+TEXT ·setg<ABIInternal>(SB), NOSPLIT, $0-8
+	get_tls(CX)
+	MOVQ AX, g(CX)
+	MOVQ AX, R14   // set the g register
 	RET

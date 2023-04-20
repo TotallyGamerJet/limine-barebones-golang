@@ -2,15 +2,25 @@ package main
 
 import "unsafe"
 
+// This is some hacky stuff in order to link to the runtime.g0 symbol.
+// It's not possible to link directly to the symbol as in var g0 g
+// because it complains about missing go.info stuff.
+// To circumvent this, use byte and then take the address of that
+// to create runtime_g0. It's perfectly acceptable for it to be a
+// pointer because the Go TLS register must always store a pointer
+// to this struct.
+//
 //go:linkname __g0 runtime.g0
 var __g0 byte
 var runtime_g0 = (*g)(unsafe.Pointer(&__g0))
 
+// copied from runtime2.go
 type stack struct {
 	lo uintptr
 	hi uintptr
 }
 
+// copied from runtime2.go
 type g struct {
 	// Stack parameters.
 	// stack describes the actual stack memory: [stack.lo, stack.hi).
@@ -24,23 +34,25 @@ type g struct {
 	stackguard1 uintptr // offset known to liblink
 }
 
-//go:linkname setg_gcc setg_gcc
-func setg_gcc(*g)
+func setg(*g)
 
-//go:noinline
+// initializeStack sets the runtime.g0 variable's
+// stack size to sizeOfStackInBytes and then calls into main.
+// main should never return but if it does this function is
+// guaranteed to never return. It is important that this function
+// is nosplit because before this is called the stack check will
+// cause the CPU to fault since there is garabage in the TLS register.
+//
 //go:nosplit
-func initializeStack(sizeOfStackInBytes uint64, fn func()) {
-	// MOVQ	$runtime·g0(SB), DI
-	// LEAQ	(-64*1024+104)(SP), BX
-	// MOVQ	BX, g_stackguard0(DI)
-	// MOVQ	BX, g_stackguard1(DI)
-	// MOVQ	BX, (g_stack+stack_lo)(DI)
-	// MOVQ	SP, (g_stack+stack_hi)(DI)
-	low := uintptr(unsafe.Add(unsafe.Pointer(&sizeOfStackInBytes), -65536)) // uintptr(sizeOfStackInBytes)
+func initializeStack(sizeOfStackInBytes uint64) {
+	// The following Go code replicates the assembly from the rt0_go(SB)
+	// function in asm_amd64.s to setup the g0 variable
+	low := uintptr(unsafe.Add(unsafe.Pointer(&sizeOfStackInBytes), -sizeOfStackInBytes))
 	runtime_g0.stackguard0 = low
 	runtime_g0.stackguard1 = low
 	runtime_g0.stack.lo = low
 	runtime_g0.stack.hi = uintptr(unsafe.Pointer(&sizeOfStackInBytes))
-	fn()
+	setg(runtime_g0)
+	main()
 	hcf()
 }

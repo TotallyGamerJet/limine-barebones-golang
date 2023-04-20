@@ -2,9 +2,10 @@ package main
 
 import (
 	_ "embed"
-	"github.com/totallygamerjet/limine-go"
 	"unsafe"
 	_ "unsafe"
+
+	"github.com/totallygamerjet/limine-go"
 )
 
 // The Limine requests can be placed anywhere, but it is important that
@@ -42,24 +43,10 @@ func hcf() {
 // big the limine provided stack is disable the stack growth check.
 //
 //go:cgo_export_static _start _start
+//go:linkname _start _start
+//go:nosplit
 func _start() {
-	//initializeStack(65536, main)
-	//hcf()
-	// Ensure we got a framebuffer.
-	if framebufferRequest.Response == nil || len(framebufferRequest.Response.Framebuffers()) < 1 {
-		hcf()
-	}
-	// Fetch the first framebuffer.
-	framebuffer := framebufferRequest.Response.Framebuffers()[0]
-	lfb := unsafe.Slice((*uint32)(framebuffer.Address), framebuffer.Pitch*framebuffer.Height)
-	// Note: we assume the framebuffer model is RGB with 32-bit pixels.
-	for i := uint64(0); i < 100; i++ {
-		putPixel(lfb, int(framebuffer.Width), int(framebuffer.Pitch), int(i), int(i), 0xffffff)
-	}
-	initPSF(lfb, int(framebuffer.Pitch))
-	drawString(lfb, int(framebuffer.Width), int(framebuffer.Pitch), "Hello World!", 0, 0, 0xFFFFFFFF, 0xFF00FFFF)
-	// We're done, just hang...
-	hcf()
+	initializeStack(0x10000) // 64KiB
 }
 
 func putPixel(screen []uint32, _, pitch, x, y int, color uint32) {
