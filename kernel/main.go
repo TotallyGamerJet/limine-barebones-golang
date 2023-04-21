@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"unsafe"
-	_ "unsafe"
 
 	"github.com/totallygamerjet/limine-go"
 )
@@ -57,7 +56,6 @@ func putPixel(screen []uint32, _, pitch, x, y int, color uint32) {
 	screen[where] = color
 }
 
-//go:noinline
 func main() {
 	// Ensure we got a framebuffer.
 	if framebufferRequest.Response == nil || len(framebufferRequest.Response.Framebuffers()) < 1 {
