@@ -10,7 +10,7 @@
 // func setg(gg *g)
 // set g. for use by needm.
 TEXT ·setg<ABIInternal>(SB), NOSPLIT, $0-8
-	get_tls(CX)
-	MOVQ AX, g(CX)
+	//get_tls(CX)
+	//MOVQ AX, g(CX)
 	MOVQ AX, R14   // set the g register
 	RET
