@@ -39,15 +39,14 @@ ifeq ($(shell $(LD) --help 2>&1 | grep 'no-pie' >/dev/null 2>&1; echo $$?),0)
     override LDFLAGS += -no-pie
 endif
 
-# tell the compiler this package is a part of the stdlib so that Cgo pragmas are allowed
-# TODO: change this to the official package once moved
 override GOFLAGS += \
 	-gcflags=github.com/totallygamerjet/limine-barebones-golang/kernel=-std \
-    -ldflags=" \
-        -linkmode external \
-        -extld '$(LD)' \
-        -extldflags '$(LDFLAGS)' \
-    "
+	-ldflags=" \
+		-linkmode internal \
+		-E _start \
+		-T -0x1fe000 \
+		-R 0x1000 \
+    	"
 
 # Use "find" to glob all *.go and *.S files in the tree and obtain the
 # object and header dependency file names.
